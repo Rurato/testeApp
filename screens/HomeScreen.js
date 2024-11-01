@@ -23,7 +23,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 20,
   },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
+  title: { 
+    fontSize: 24, 
+    fontWeight: "bold", 
+    marginBottom: 16 
+  }
 });
 
 export default HomeScreen;
