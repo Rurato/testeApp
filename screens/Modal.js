@@ -12,9 +12,11 @@ export function ModalItem({handleClose}){
 
     async function Hadlesaveitem(){
         setItem([{name: nome, quantity: quantidade, valor: valor}]);
-        console.log(item);
-        await SaveItem("@pass", item)
-        handleClose();
+        const novoitem = item
+        if(novoitem.length==!null){
+            await SaveItem("@pass", novoitem)
+            handleClose();
+        }
     }
 
     return(
@@ -51,7 +53,13 @@ export function ModalItem({handleClose}){
           </View>
         )}
       />
+        <View style={styles.title}>
             <Button title="Confirmar" onPress={Hadlesaveitem}/>
+        </View>
+        <View style={styles.title}>
+            <Button title="voltar"  onPress={handleClose}/>
+        </View>
+            
         </View>
     )
     

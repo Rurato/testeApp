@@ -16,9 +16,16 @@ const StockScreen = () => {
   
     async function loaditems() {
       //AsyncStorage.clear("@pass")
-      const items = await GetItem("@pass");
-      console.log(items)
-      //setItem(items);
+      let items = await GetItem("@pass");
+      let element = new Array();
+      setItem([]);
+      for (i = 0; i < items.length; i++) {
+        for (j= 0; j<1; j++) {
+          element.push(items[i][j])
+        }
+      }
+      setItem(element);
+      console.log(item)
     }
 
   const [ModalVisible, setModalVisible] = useState(false)
