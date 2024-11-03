@@ -2,22 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, Button, StyleSheet, Modal } from 'react-native';
 import {ModalItem} from './Modal'
 import UseStorage from './useStorage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const StockScreen = () => {
-  const [items, setItems] = useState([
+  const [item, setItem] = useState([
     {name: 'Cerveja', quantity: 20, valor: 9.50 },
     {name: 'Vodka', quantity: 10, valor: 40  },
     {name: 'Whisky', quantity: 5, valor: 60  },
   ]);
   
   const {GetItem} = UseStorage();
-  useEffect(()=>{
+  
     async function loaditems() {
-      const items = await GetItem("@pass")
-      setItems(items);
+      //AsyncStorage.clear("@pass")
+      const items = await GetItem("@pass");
+      console.log(items)
+      //setItem(items);
     }
-    loaditems();
-  })
 
   const [ModalVisible, setModalVisible] = useState(false)
 
@@ -25,7 +27,7 @@ const StockScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Controle de Estoque</Text>
       <View style={styles.button}>
-        <Button title='Adicionar item' onPress={() => setModalVisible(true)}/>
+        <Button title='lodar item' onPress={() => loaditems()}/>
         <Button title='Adicionar item' onPress={() => setModalVisible(true)}/>
       </View>
 
@@ -36,7 +38,7 @@ const StockScreen = () => {
       </View>
 
       <FlatList
-        data={items}
+        data={item}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <View style={styles.item}>
@@ -46,6 +48,7 @@ const StockScreen = () => {
           </View>
         )}
       />
+
       <Modal visible={ModalVisible} animationType='fade'>
         <ModalItem handleClose={()=>setModalVisible(false)}/>
       </Modal>

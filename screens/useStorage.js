@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const UseStorage = () =>{
     const GetItem = async (key) =>{
       try {
-        const items = await AsyncStorage.GetItem(key)
+        const items = await AsyncStorage.getItem(key);
         return JSON.parse(items) || [];
       } catch (error) {
         console.log("Erro ao buscar item", error)
@@ -11,12 +11,12 @@ const UseStorage = () =>{
       }
     }
   
-    const saveitem = async (key, novoitem) =>{
+    const SaveItem = async (key, novoitem) =>{
       try {
         let items = await GetItem(key);
-        items.push[novoitem]
+        items.push(novoitem)
   
-        await AsyncStorage.setItem(key, JSON.stringify(novoitem))
+        await AsyncStorage.setItem(key, JSON.stringify(items))
   
       } catch (error) {
         console.log("Erro ao salvar item", error)
@@ -27,7 +27,9 @@ const UseStorage = () =>{
       try {
         let items = await GetItem(key);
   
-        let myitems = items.filter( (item) => {return(item ==! itemremov)})
+        let myitems = items.filter( (item) => {
+          return(item ==! itemremov)
+        })
   
         await AsyncStorage.setItem(key, JSON.stringify(myitems))
         return myitems;
@@ -39,7 +41,7 @@ const UseStorage = () =>{
   
     return{
         GetItem,
-        saveitem,
+        SaveItem,
         deleteitem,
     }
   }

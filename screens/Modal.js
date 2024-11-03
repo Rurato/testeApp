@@ -4,15 +4,16 @@ import UseStorage from './useStorage'
 
 //Tela pra adicionar item
 export function ModalItem({handleClose}){
-    const {saveitem} = UseStorage()
+    const {SaveItem} = UseStorage()
     const [nome,setnome] = useState()
     const [valor,setvalor] = useState()
     const [quantidade,setquantidade] = useState()
-    const [item, setItem] = useState([{name: nome, quantity: quantidade, valor: valor }]);
+    const [item, setItem] = useState([]);
 
     async function Hadlesaveitem(){
-        setItem([{name: nome, quantity: quantidade, valor: valor}])
-        await saveitem("@pass", item)
+        setItem([{name: nome, quantity: quantidade, valor: valor}]);
+        console.log(item);
+        await SaveItem("@pass", item)
         handleClose();
     }
 
@@ -39,7 +40,17 @@ export function ModalItem({handleClose}){
                 value={quantidade}
                 onChangeText={setquantidade}
             />
-            
+            <FlatList
+        data={item}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text>{item.name}</Text>
+            <Text>{item.quantity}</Text>
+            <Text>R${item.valor}</Text>
+          </View>
+        )}
+      />
             <Button title="Confirmar" onPress={Hadlesaveitem}/>
         </View>
     )
