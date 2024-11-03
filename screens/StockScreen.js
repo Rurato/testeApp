@@ -1,51 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, Button, StyleSheet, Modal } from 'react-native';
 import {ModalItem} from './Modal'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const UseStorage = () =>{
-  const getitem = async (key) =>{
-    try {
-      const items = await AsyncStorage.getItem(key)
-      return JSON.parse(items) || [];
-    } catch (error) {
-      console.log("Erro ao buscar item", error)
-      return[];
-    }
-  }
-
-  const saveitem = async (key, novoitem) =>{
-    try {
-      let items = await getitem(key);
-      items.push[novoitem]
-
-      await AsyncStorage.setItem(key, JSON.stringify(novoitem))
-
-    } catch (error) {
-      console.log("Erro ao salvar item", error)
-    }
-  }
-
-  const deleteitem = async (key, itemremov) =>{
-    try {
-      let items = await getitem(key);
-
-      let myitems = items.filter( (item) => {return(item ==! itemremov)})
-
-      await AsyncStorage.setItem(key, JSON.stringify(myitems))
-      return myitems;
-
-    } catch (error) {
-      console.log("Erro ao deletar item", error)
-    }
-  }
-
-  return{
-    getitem,
-    saveitem,
-    deleteitem,
-  }
-}
+import UseStorage from './useStorage'
 
 const StockScreen = () => {
   const [items, setItems] = useState([
@@ -53,12 +9,23 @@ const StockScreen = () => {
     {name: 'Vodka', quantity: 10, valor: 40  },
     {name: 'Whisky', quantity: 5, valor: 60  },
   ]);
+  
+  const {GetItem} = UseStorage();
+  useEffect(()=>{
+    async function loaditems() {
+      const items = await GetItem("@pass")
+      setItems(items);
+    }
+    loaditems();
+  })
+
   const [ModalVisible, setModalVisible] = useState(false)
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Controle de Estoque</Text>
       <View style={styles.button}>
+        <Button title='Adicionar item' onPress={() => setModalVisible(true)}/>
         <Button title='Adicionar item' onPress={() => setModalVisible(true)}/>
       </View>
 

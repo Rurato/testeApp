@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button, FlatList } from "react-native";
-import UseStorage from './StockScreen'
+import UseStorage from './useStorage'
 
 //Tela pra adicionar item
 export function ModalItem({handleClose}){
@@ -8,13 +8,14 @@ export function ModalItem({handleClose}){
     const [nome,setnome] = useState()
     const [valor,setvalor] = useState()
     const [quantidade,setquantidade] = useState()
-    const [item, setItem] = useState([{name: 'Cerveja', quantity: 20, valor: 9.50 }]);
+    const [item, setItem] = useState([{name: nome, quantity: quantidade, valor: valor }]);
 
     async function Hadlesaveitem(){
-        setItem([{name: 'teste1', quantity: quantidade, valor: valor}])
-        //await saveitem('@pass', item)
-        //handleClose();
+        setItem([{name: nome, quantity: quantidade, valor: valor}])
+        await saveitem("@pass", item)
+        handleClose();
     }
+
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Item</Text>
@@ -22,33 +23,24 @@ export function ModalItem({handleClose}){
                 style={styles.input}
                 placeholder="Item"
                 value={nome}
+                onChangeText={setnome}
             />
             <Text style={styles.title}>Valor</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Valor"
                 value={valor}
+                onChangeText={setvalor}
             />
             <Text style={styles.title}>Quantidade</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Quantidade"
                 value={quantidade}
+                onChangeText={setquantidade}
             />
             
             <Button title="Confirmar" onPress={Hadlesaveitem}/>
-            <FlatList
-                data={item}
-                keyExtractor={(item) => item.nome}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <Text>{item.name}</Text>
-                        <Text>{item.quantity}</Text>
-                        <Text>R${item.valor}</Text>
-                    </View>
-                )}
-            />
-        
         </View>
     )
     
