@@ -2,41 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, Button, StyleSheet, Modal } from 'react-native';
 import {ModalItem} from './Modal'
 import UseStorage from './useStorage'
+import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const StockScreen = () => {
-  const [item, setItem] = useState([
-    {name: 'Cerveja', quantity: 20, valor: 9.50 },
-    {name: 'Vodka', quantity: 10, valor: 40  },
-    {name: 'Whisky', quantity: 5, valor: 60  },
-  ]);
+  const [item, setItem] = useState([]);
+  const [ModalVisible, setModalVisible] = useState(false)
   
   const {GetItem} = UseStorage();
-  
+  const focused = useIsFocused();
+  useEffect(()=>{
     async function loaditems() {
       //AsyncStorage.clear("@pass")
       let items = await GetItem("@pass");
       let element = new Array();
-      setItem([]);
       for (i = 0; i < items.length; i++) {
         for (j= 0; j<1; j++) {
           element.push(items[i][j])
         }
       }
       setItem(element);
-      console.log(item)
     }
+    loaditems();
+  }, [focused, ModalVisible])
+    
 
-  const [ModalVisible, setModalVisible] = useState(false)
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Controle de Estoque</Text>
       <View style={styles.button}>
-        <Button title='lodar item' onPress={() => loaditems()}/>
         <Button title='Adicionar item' onPress={() => setModalVisible(true)}/>
       </View>
+      
 
       <View style={styles.item}>
             <Text style={styles.colum}>Nome</Text>
