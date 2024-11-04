@@ -42,10 +42,15 @@ export function ModalItem({handleClose}){
                 value={quantidade}
                 onChangeText={setquantidade}
             />
+            <View style={styles.item}>
+            <Text style={styles.colum}>Nome</Text>
+            <Text style={styles.colum}>Estoque</Text>
+            <Text style={styles.colum}>Valor</Text>
+      </View>
             <FlatList
-        data={item}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
+                data={item}
+                keyExtractor={(item) => item.name}
+                renderItem={({ item }) => (
           <View style={styles.item}>
             <Text>{item.name}</Text>
             <Text>{item.quantity}</Text>
@@ -71,4 +76,5 @@ const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'top', padding: 16 },
     title: { fontSize: 16, marginBottom: 8 },
     input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 12, paddingLeft: 8 },
+    item: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 ,  paddingRight: 10},
 })
