@@ -1,45 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, Button, StyleSheet, Modal } from 'react-native';
-import {ModalItem} from './Modal'
-import UseStorage from './useStorage'
-import { useIsFocused } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
+import { ModalItem } from "./Modal";
+import UseStorage from "./useStorage";
+import { useIsFocused } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StockScreen = () => {
   const [item, setItem] = useState([]);
-  const [ModalVisible, setModalVisible] = useState(false)
-  
-  const {GetItem} = UseStorage();
+  const [ModalVisible, setModalVisible] = useState(false);
+
+  const { GetItem } = UseStorage();
   const focused = useIsFocused();
-  useEffect(()=>{
-    async function loaditems() {
-      //AsyncStorage.clear("@pass")
-      let items = await GetItem("@pass");
-      let element = new Array();
-      for (i = 0; i < items.length; i++) {
-        for (j= 0; j<1; j++) {
-          element.push(items[i][j])
+
+  useEffect(() => {
+    async function loadItems() {
+      let items = (await GetItem("@pass")) || [];
+      let element = [];
+
+      // Ajustando para garantir que cada item tenha o formato correto
+      items.forEach((item) => {
+        if (
+          item &&
+          item[0] &&
+          item[0].name &&
+          item[0].quantity &&
+          item[0].valor
+        ) {
+          element.push(item[0]);
         }
-      }
+      });
+
       setItem(element);
     }
-    loaditems();
-  }, [focused, ModalVisible])
-    
+    loadItems();
+  }, [focused, ModalVisible]);
 
+  const deleteItem = async (name) => {
+    const updatedItems = item.filter((i) => i.name !== name); // Filtra o item que será excluído
+    setItem(updatedItems);
+
+    await AsyncStorage.setItem("@pass", JSON.stringify(updatedItems));
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Controle de Estoque</Text>
       <View style={styles.button}>
-        <Button title='Adicionar item' onPress={() => setModalVisible(true)}/>
+        <Button title="Adicionar item" onPress={() => setModalVisible(true)} />
       </View>
-      
 
       <View style={styles.item}>
-            <Text style={styles.colum}>Nome</Text>
-            <Text style={styles.colum}>Estoque</Text>
-            <Text style={styles.colum}>Valor</Text>
+        <Text style={styles.colum}>Nome</Text>
+        <Text style={styles.colum}>Estoque</Text>
+        <Text style={styles.colum}>Valor</Text>
       </View>
 
       <FlatList
@@ -47,6 +69,9 @@ const StockScreen = () => {
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <View style={styles.item}>
+            <TouchableOpacity onPress={() => deleteItem(item.name)}>
+              <Text style={styles.deleteButton}>X</Text>
+            </TouchableOpacity>
             <Text>{item.name}</Text>
             <Text>{item.quantity}</Text>
             <Text>R${item.valor}</Text>
@@ -54,8 +79,8 @@ const StockScreen = () => {
         )}
       />
 
-      <Modal visible={ModalVisible} animationType='fade'>
-        <ModalItem handleClose={()=>setModalVisible(false)}/>
+      <Modal visible={ModalVisible} animationType="fade">
+        <ModalItem handleClose={() => setModalVisible(false)} />
       </Modal>
     </View>
   );
@@ -63,11 +88,24 @@ const StockScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
-  item: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 ,  paddingRight: 10},
-  input: { width: 50, height: 40, borderColor: 'gray', borderWidth: 1, textAlign: 'center' },
-  button: { paddingBottom: 20},
-  colum:{fontWeight: 'bold'},
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
+  item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+    paddingRight: 10,
+  },
+  input: {
+    width: 50,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    textAlign: "center",
+  },
+  button: { paddingBottom: 20 },
+  colum: { fontWeight: "bold", marginLeft: 30 },
+  deleteButton: { fontWeight: 'bold'},
 });
 
 export default StockScreen;
