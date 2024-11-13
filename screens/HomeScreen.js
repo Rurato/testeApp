@@ -10,7 +10,7 @@ const HomeScreen = ({ navigation }) => {
       />
       <Button
         title="Controle de Mesas"
-        onPress={() => navigation.navigate("TableControl")}
+        onPress={() => navigation.navigate("TableControlScreen")}
       />
     </View>
   );

@@ -22,11 +22,27 @@ const StockScreen = () => {
   const focused = useIsFocused();
 
   useEffect(() => {
-    async function loadItems() {
+    // async function loadItems() {
+    //   let items = (await GetItem("@pass")) || [];
+    //   let element = [];
+
+    //   // Ajustando para garantir que cada item tenha o formato correto
+    //   setItem(items);
+    // }
+    loadItems();
+  }, [focused, ModalVisible]);
+
+  // Função para carregar itens do AsyncStorage e atualizar o estado
+  const loadItems = async (item) => {
+    try {
       let items = (await GetItem("@pass")) || [];
       let element = [];
+      // for (let i = 0; i < items.length; i++) {
+      //   for (let j = 0; j < 1; j++) {
+      //     element.push(items[i][j]);
+      //   }
+      // }
 
-      // Ajustando para garantir que cada item tenha o formato correto
       items.forEach((item) => {
         if (
           item &&
@@ -38,16 +54,39 @@ const StockScreen = () => {
           element.push(item[0]);
         }
       });
-
       setItem(element);
+    } catch (error) {
+      console.error("Erro ao carregar itens:", error);
     }
-    loadItems();
-  }, [focused, ModalVisible]);
+  };
+
+  // Função para excluir item e atualizar AsyncStorage
+  // const deleteItem = async (name) => {
+  //   try {
+  //     let items = await GetItem("@pass") || [];
+  //     let updatedItems = items.filter((i) => i[0].name !== name); // Filtra o item pelo nome
+  //     // let updatedItems = [];
+  //     // for (let i = 0; i < items.length; i++) {
+  //     //   for (let j = 0; j < 1; j++) {
+  //     //     if (items[i][j].name !== name) {
+  //     //       updatedItems.push(items[i][j]);
+  //     //     }
+  //     //     console.log(updatedItems);
+  //     //   }
+  //     // }
+  //     // Atualiza o estado e salva no AsyncStorage
+  //     await AsyncStorage.setItem("@pass", JSON.stringify(updatedItems));
+  //     setItem(updatedItems.map(i => i[0])); // Converte novamente para o formato usado em `element`
+  //   } catch (error) {
+  //     console.error("Erro ao excluir o item:", error);
+  //   }
+  // };
 
   const deleteItem = async (name) => {
     const updatedItems = item.filter((i) => i.name !== name); // Filtra o item que será excluído
     setItem(updatedItems);
 
+    // Atualiza o AsyncStorage
     await AsyncStorage.setItem("@pass", JSON.stringify(updatedItems));
   };
 
@@ -105,7 +144,7 @@ const styles = StyleSheet.create({
   },
   button: { paddingBottom: 20 },
   colum: { fontWeight: "bold", marginLeft: 30 },
-  deleteButton: { fontWeight: 'bold'},
+  deleteButton: { fontWeight: "bold" },
 });
 
 export default StockScreen;
