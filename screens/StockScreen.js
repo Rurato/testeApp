@@ -90,9 +90,19 @@ const StockScreen = () => {
     await AsyncStorage.setItem("@pass", JSON.stringify(updatedItems));
   };
 
+  const verlog = async () =>{
+    let useStorage= await GetItem("@pass");
+    //await AsyncStorage.setItem("@pass", JSON.stringify(null)); // Limpa o use storage
+    console.log(useStorage)
+    console.log(item)
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Controle de Estoque</Text>
+      <View style={styles.button}>
+        <Button title="ver log" onPress={() => verlog()} />
+      </View>
       <View style={styles.button}>
         <Button title="Adicionar item" onPress={() => setModalVisible(true)} />
       </View>
