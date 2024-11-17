@@ -42,6 +42,7 @@ export function ModalItem({ handleClose }) {
         placeholder="Valor"
         value={valor}
         onChangeText={setvalor}
+        keyboardType="numeric"
       />
       <Text style={styles.title}>Quantidade</Text>
       <TextInput
@@ -49,6 +50,7 @@ export function ModalItem({ handleClose }) {
         placeholder="Quantidade"
         value={quantidade}
         onChangeText={setquantidade}
+        keyboardType="numeric"
       />
       <View style={styles.item}>
         <Text style={styles.colum}>Nome</Text>
